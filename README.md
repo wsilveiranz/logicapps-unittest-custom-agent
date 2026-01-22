@@ -11,6 +11,96 @@ This agent helps developers accelerate unit test creation for Logic Apps Standar
 - Generating typed mock data classes
 - Supporting both single-workflow and batch operations
 
+## Installing the Custom Agent 
+
+To integrate this agent into your Logic Apps Standard project:
+
+### 1. Create the Agent Structure
+
+**Important**: The `.github/` folder must be placed **inside your Logic Apps project directory**, not at the workspace root.
+
+```
+<workspace>/                           # VS Code workspace root
+└── <LogicAppsProject>/                # Your Logic Apps project folder
+    ├── .github/
+    │   ├── agents/
+    │   │   └── Logic Apps Unit Test Author.agent.md
+    │   └── prompts/
+    │       ├── la-unit-tests-discover.prompt.md
+    │       ├── la-unit-tests-create-cases.prompt.md
+    │       ├── la-unit-tests-speckit-specs.prompt.md
+    │       ├── la-unit-tests-implement.prompt.md
+    │       ├── la-unit-tests-generate-test-data.prompt.md
+    │       └── la-unit-tests-project-batch.prompt.md
+    ├── host.json
+    ├── connections.json
+    ├── local.settings.json
+    └── <workflow-name>/
+        └── workflow.json
+```
+
+### 2. Copy Agent Files
+
+Copy all agent and prompt files from this repository's `.github/` folder into your Logic Apps project:
+
+```bash
+cd <path-to-your-logicapps-project>
+mkdir -p .github/agents .github/prompts
+# Copy files from this repository
+```
+
+Files to copy:
+- **Agent definition**: `.github/agents/Logic Apps Unit Test Author.agent.md`
+- **All prompt files**: `.github/prompts/*.prompt.md`
+
+### 3. Verify GitHub Copilot Access
+
+Ensure you have:
+- **GitHub Copilot Chat** extension installed in VS Code
+- **Logic Apps project folder** opened in VS Code (containing the `.github/` folder)
+- **.github folder** is inside the Logic Apps project directory
+
+### 4. Start Using the Agent
+
+Once installed, invoke the agent in GitHub Copilot Chat:
+
+```plaintext
+@Logic Apps Unit Test Author discover workflows
+```
+
+Or reference specific skills directly:
+
+```plaintext
+#file:.github/prompts/la-unit-tests-discover.prompt.md
+```
+
+The agent will automatically understand your Logic Apps project structure and guide you through test creation.
+
+### Prerequisites
+
+Before using the agent, ensure:
+- A Logic Apps Standard project with `workflow.json` files
+- .NET 8.0 SDK installed (for test execution)
+- VS Code opened at the Logic Apps project level (or workspace containing it)
+
+## Getting Started
+
+1. **Open the Logic Apps workspace** in VS Code
+2. **Ensure .github folder** contains the agent and prompt files
+3. **Invoke the agent** using GitHub Copilot Chat
+4. **Let the agent guide you** through discovery → specs → implementation
+5. **Reference a skill**: If you want to use a specific skill directly, you can invoke that skill by using `\<skill name>` at the prompt. The agent was defined in a way that it will use the most relevant skill for a particular job.
+
+## Agent Activation
+
+The agent automatically loads when working in a Logic Apps Standard workspace with unit tests. To explicitly reference:
+
+```plaintext
+@Logic Apps Unit Test Author discover workflows
+@Logic Apps Unit Test Author create test cases for la-process-message
+@Logic Apps Unit Test Author implement tests for all workflows
+```
+
 ## Architecture
 
 The agent uses a **prompt-based skill system** where specialized prompts handle different aspects of test authoring:
@@ -79,34 +169,6 @@ graph TD
    - Implement test methods with proper assertions
    - Generate `testSettings.config` files
 
-## Project Structure (Extension Pattern)
-
-```
-<workspace>/
-├── <LogicAppsProject>/              # Your Logic Apps project
-│   ├── host.json
-│   ├── connections.json
-│   ├── local.settings.json
-│   └── <workflow-name>/
-│       └── workflow.json
-│
-├── plan/                            # Test specifications (at workspace root)
-│   └── <workflow-name>-testplan.md
-│
-└── Tests/                           # Unit test project
-    ├── Tests.sln
-    └── LogicApps/
-        ├── LogicApps.csproj         # Must target net8.0
-        ├── TestExecutor.cs          # Helper class for config
-        └── <workflow-name>/
-            ├── testSettings.config   # Workflow paths
-            ├── MockOutputs/          # Typed mock classes
-            │   ├── TriggerOutput.cs
-            │   └── ActionOutput.cs
-            └── TC01_Scenario/        # Test case folder
-                └── TC01_Scenario.cs  # MSTest class
-```
-
 ## Usage Examples
 
 ### Single Workflow Testing
@@ -151,59 +213,6 @@ Agent will:
 4. Generate trigger and action mock payloads
 ```
 
-## Critical Constraints
-
-The agent enforces these technical constraints to ensure tests work correctly:
-
-### 1. ActionMock Constructors
-- Use **separate constructors** for success (with `outputs`) vs failure (with `error`)
-- **NEVER** pass outputs to a failed action mock
-
-```csharp
-// ✅ Correct - Success mock
-new ReadBlobActionMock(
-    status: TestWorkflowStatus.Succeeded,
-    outputs: new ReadBlobActionOutput { StatusCode = 200 }
-)
-
-// ✅ Correct - Failure mock
-new ReadBlobActionMock(
-    status: TestWorkflowStatus.Failed,
-    error: new TestErrorInfo(ErrorResponseCode.ServiceProviderActionFailed)
-)
-
-// ❌ Wrong - Don't pass outputs to failed mock
-new ReadBlobActionMock(
-    status: TestWorkflowStatus.Failed,
-    outputs: new ReadBlobActionOutput(),  // ← REMOVE THIS
-    error: new TestErrorInfo(...)
-)
-```
-
-### 2. ServiceProvider Output Format
-Must include exactly these properties with `[JsonProperty]` attributes:
-- `body` (JToken)
-- `statusCode` (int)
-- `headers` (JObject)
-
-### 3. Project File Requirements
-Always include inline `PackageReference` in `LogicApps.csproj`:
-
-```xml
-<PackageReference Include="Microsoft.Azure.Workflows.WebJobs.Tests.Extension" Version="1.*" />
-<PackageReference Include="MSTest.TestAdapter" Version="3.2.0" />
-<PackageReference Include="MSTest.TestFramework" Version="3.2.0" />
-<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-```
-
-### 4. Scaffolding Prerequisites
-Before implementing tests, verify these paths exist:
-- `Tests/LogicApps/<workflow-name>/`
-- `Tests/LogicApps/<workflow-name>/MockOutputs/`
-- `Tests/LogicApps/<workflow-name>/testSettings.config`
-
-If missing, user must run **"Create Unit Test"** from Logic Apps Designer first.
-
 ## Test Case Naming Convention
 
 ```plaintext
@@ -227,19 +236,6 @@ Examples:
 | Edge Cases | Large payloads, special characters | Succeeded |
 | Data Verification | Verify transformations/outputs | Succeeded |
 
-## Commands
-
-```bash
-# Build tests
-dotnet build
-
-# Run all tests
-dotnet test
-
-# Run specific test
-dotnet test --filter "FullyQualifiedName~TC01"
-```
-
 ## Quality & Safety
 
 - ✅ No secrets or real credentials in test data
@@ -248,24 +244,6 @@ dotnet test --filter "FullyQualifiedName~TC01"
 - ✅ Keep diffs minimal and reviewable
 - ✅ Specs are reusable source of truth
 - ✅ Code is implementation derived from specs
-
-## Getting Started
-
-1. **Open the Logic Apps workspace** in VS Code
-2. **Ensure .github folder** contains the agent and prompt files
-3. **Invoke the agent** using GitHub Copilot Chat
-4. **Reference a skill**: Use `#file:.github/prompts/<prompt-name>.prompt.md` to invoke specific skills
-5. **Let the agent guide you** through discovery → specs → implementation
-
-## Agent Activation
-
-The agent automatically loads when working in a Logic Apps Standard workspace with unit tests. To explicitly reference:
-
-```plaintext
-@Logic Apps Unit Test Author discover workflows
-@Logic Apps Unit Test Author create test cases for la-process-message
-@Logic Apps Unit Test Author implement tests for all workflows
-```
 
 ## Documentation Links
 
