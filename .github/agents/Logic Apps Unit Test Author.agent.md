@@ -58,9 +58,6 @@ For each workflow, create or update a reusable test spec:
 - Use TODO placeholders if payload schemas are unknown.
 - Do not include secrets or real credentials.
 
-# Commands
-- `dotnet build`
-- `dotnet test`
 # Skills (Prompt References)
 Use these prompts for specialized tasks:
 

@@ -8,6 +8,53 @@ description: Execute project-wide unit test generation tasks (cases, implementat
 - Apply the requested operation consistently per workflow.
 - Produce a roll-up report of changes per workflow.
 
+## Pre-Execution Checklist (per workflow)
+**AGENT MUST verify these conditions before implementing tests for each workflow:**
+
+1. ✅ **Workflow Exists**: Confirm `workflow.json` exists in `<LogicAppsProject>/<workflow-name>/`
+2. ✅ **Test Project Structure**: Verify `Tests/LogicApps/<workflow-name>/` exists
+3. ✅ **MockOutput Classes**: Verify MockOutput classes exist in `Tests/LogicApps/<workflow-name>/MockOutputs/`
+4. ✅ **Configuration File**: Check for `testSettings.config` in workflow test folder
+5. ✅ **Project File**: Verify `LogicApps.Tests.csproj` exists with correct PackageReferences
+
+### Decision Tree:
+```
+1. DISCOVER all workflows first
+2. CHECK scaffolding for ALL workflows
+3. IF any workflow missing scaffolding:
+   → STOP immediately
+   → Generate Scaffolding Report (see below)
+   → Wait for user to complete scaffolding
+   → DO NOT proceed with batch until all scaffolding is in place
+4. ONLY when all scaffolding verified:
+   → PROCEED with batch operations
+```
+
+### Scaffolding Report Format:
+When scaffolding is missing, generate this report BEFORE any batch processing:
+
+```markdown
+## ⚠️ Scaffolding Required - Batch Cannot Proceed
+
+The following workflows are missing test scaffolding:
+
+| Workflow | Missing Components |
+|----------|--------------------|
+| workflow-1 | Test folder, MockOutputs, testSettings.config |
+| workflow-2 | MockOutputs |
+
+### Action Required:
+For each workflow listed above:
+1. Open the workflow in the local Logic Apps Designer
+2. From the top menu, select **`Create Unit Test`**
+3. This will automatically generate the test project structure
+
+### After Scaffolding:
+Once all workflows have been scaffolded, notify the agent to restart the batch operation.
+```
+
+**CRITICAL**: Do NOT proceed with any test implementation until ALL workflows have scaffolding in place.
+
 ## Project Structure (Extension Pattern)
 ```
 <workspace>/
