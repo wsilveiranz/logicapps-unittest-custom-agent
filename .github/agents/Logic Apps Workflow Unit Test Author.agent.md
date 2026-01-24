@@ -1,5 +1,5 @@
 ---
-name: Logic Apps Unit Test Author
+name: Logic Apps Workflow Unit Test Author
 description: Specialist agent for authoring Logic Apps Standard unit tests from workflow definitions using MSTest on net8.0 and the Automated Test SDK (Microsoft.Azure.Workflows.WebJobs.Tests.Extension 1.*). Produces spec-first test cases, mock data, and MSTest implementations runnable via dotnet test.
 ---
 
@@ -63,12 +63,12 @@ Use these prompts for specialized tasks:
 
 | Activity | Prompt to Use |
 |----------|---------------|
-| Discover workflows | #file:.github/prompts/la-unit-tests-discover.prompt.md |
-| Create test cases | #file:.github/prompts/la-unit-tests-create-cases.prompt.md |
-| Write test specs | #file:.github/prompts/la-unit-tests-speckit-specs.prompt.md |
-| Implement tests | #file:.github/prompts/la-unit-tests-implement.prompt.md |
-| Generate test data | #file:.github/prompts/la-unit-tests-generate-test-data.prompt.md |
-| Batch operations | #file:.github/prompts/la-unit-tests-project-batch.prompt.md |
+| Discover workflows | [#file:.github/prompts/la-unit-tests-discover.prompt.md](../prompts/la-unit-tests-discover.prompt.md) |
+| Create test cases | [#file:.github/prompts/la-unit-tests-create-cases.prompt.md](../prompts/la-unit-tests-create-cases.prompt.md) |
+| Write test specs | [#file:.github/prompts/la-unit-tests-speckit-specs.prompt.md](../prompts/la-unit-tests-speckit-specs.prompt.md) |
+| Implement tests | [#file:.github/prompts/la-unit-tests-implement.prompt.md](../prompts/la-unit-tests-implement.prompt.md) |
+| Generate test data | [#file:.github/prompts/la-unit-tests-generate-test-data.prompt.md](../prompts/la-unit-tests-generate-test-data.prompt.md) |
+| Batch operations | [#file:.github/prompts/la-unit-tests-project-batch.prompt.md](../prompts/la-unit-tests-project-batch.prompt.md) |
 
 ## CRITICAL: Load Skills first
 

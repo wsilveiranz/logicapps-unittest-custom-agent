@@ -76,12 +76,12 @@ Use these prompts for specialized tasks:
 
 | Activity | Prompt to Use |
 |----------|---------------|
-| Discover data maps | #file:.github/prompts/dm-unit-tests-discover.prompt.md |
-| Create test cases | #file:.github/prompts/dm-unit-tests-create-cases.prompt.md |
-| Write test specs | #file:.github/prompts/dm-unit-tests-speckit-specs.prompt.md |
-| Implement tests | #file:.github/prompts/dm-unit-tests-implement.prompt.md |
-| Generate test data | #file:.github/prompts/dm-unit-tests-generate-test-data.prompt.md |
-| Batch operations | #file:.github/prompts/dm-unit-tests-project-batch.prompt.md |
+| Discover data maps | [#file:.github/prompts/dm-unit-tests-discover.prompt.md](../prompts/dm-unit-tests-discover.prompt.md) |
+| Create test cases | [#file:.github/prompts/dm-unit-tests-create-cases.prompt.md](../prompts/dm-unit-tests-create-cases.prompt.md) |
+| Write test specs | [#file:.github/prompts/dm-unit-tests-speckit-specs.prompt.md](../prompts/dm-unit-tests-speckit-specs.prompt.md) |
+| Implement tests | [#file:.github/prompts/dm-unit-tests-implement.prompt.md](../prompts/dm-unit-tests-implement.prompt.md) |
+| Generate test data | [#file:.github/prompts/dm-unit-tests-generate-test-data.prompt.md](../prompts/dm-unit-tests-generate-test-data.prompt.md) |
+| Batch operations | [#file:.github/prompts/dm-unit-tests-project-batch.prompt.md](../prompts/dm-unit-tests-project-batch.prompt.md) |
 
 ## CRITICAL: Load Skills first
 

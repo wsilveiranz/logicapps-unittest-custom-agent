@@ -1,15 +1,26 @@
-# Logic Apps Standard Unit Test Authoring Agent
+# Logic Apps Standard Unit Test Authoring Agents
 
-An AI-powered agent system for authoring unit tests for Azure Logic Apps Standard workflows using the Automated Test Framework SDK.
+AI-powered agents for authoring unit tests for Azure Logic Apps Standard **workflows** and **data maps** using the Automated Test Framework SDK.
 
 ## Overview
 
-This agent helps developers accelerate unit test creation for Logic Apps Standard workflows by:
+This repository provides two specialized agents to accelerate unit test creation:
+
+### 1. Logic Apps Workflow Unit Test Author
+For testing **workflows** (`workflow.json` files):
 - Discovering workflow definitions and analyzing testability
 - Creating comprehensive test specifications
 - Implementing MSTest test cases with proper mocks
 - Generating typed mock data classes
 - Supporting both single-workflow and batch operations
+
+### 2. Logic Apps Data Map Unit Test Author
+For testing **data maps** (`.lml` and `.xslt` files):
+- Discovering data map definitions and analyzing schemas
+- Creating test specifications for transformations
+- Implementing MSTest test cases using `DataMapTestExecutor`
+- Generating input/expected output test data files
+- Supporting both single-map and batch operations
 
 ## Installing the Custom Agent 
 
@@ -24,19 +35,33 @@ To integrate this agent into your Logic Apps Standard project:
 └── <LogicAppsProject>/                # Your Logic Apps project folder
     ├── .github/
     │   ├── agents/
-    │   │   └── Logic Apps Unit Test Author.agent.md
+    │   │   ├── Logic Apps Workflow Unit Test Author.agent.md
+    │   │   └── Logic Apps Data Map Unit Test Author.agent.md
     │   └── prompts/
     │       ├── la-unit-tests-discover.prompt.md
     │       ├── la-unit-tests-create-cases.prompt.md
     │       ├── la-unit-tests-speckit-specs.prompt.md
     │       ├── la-unit-tests-implement.prompt.md
     │       ├── la-unit-tests-generate-test-data.prompt.md
-    │       └── la-unit-tests-project-batch.prompt.md
+    │       ├── la-unit-tests-project-batch.prompt.md
+    │       ├── dm-unit-tests-discover.prompt.md
+    │       ├── dm-unit-tests-create-cases.prompt.md
+    │       ├── dm-unit-tests-speckit-specs.prompt.md
+    │       ├── dm-unit-tests-implement.prompt.md
+    │       ├── dm-unit-tests-generate-test-data.prompt.md
+    │       └── dm-unit-tests-project-batch.prompt.md
     ├── host.json
     ├── connections.json
     ├── local.settings.json
-    └── <workflow-name>/
-        └── workflow.json
+    ├── <workflow-name>/
+    │   └── workflow.json
+    └── Artifacts/
+        ├── MapDefinitions/
+        │   └── <map-name>.lml
+        ├── Maps/
+        │   └── <map-name>.xslt
+        └── Schemas/
+            └── <schema-name>.xsd
 ```
 
 ### 2. Copy Agent Files
@@ -50,8 +75,11 @@ mkdir -p .github/agents .github/prompts
 ```
 
 Files to copy:
-- **Agent definition**: `.github/agents/Logic Apps Unit Test Author.agent.md`
-- **All prompt files**: `.github/prompts/*.prompt.md`
+- **Agent definitions**: 
+  - `.github/agents/Logic Apps Workflow Unit Test Author.agent.md`
+  - `.github/agents/Logic Apps Data Map Unit Test Author.agent.md`
+- **Workflow test prompts**: `.github/prompts/la-unit-tests-*.prompt.md`
+- **Data map test prompts**: `.github/prompts/dm-unit-tests-*.prompt.md`
 
 ### 3. Verify GitHub Copilot Access
 
@@ -60,26 +88,33 @@ Ensure you have:
 - **Logic Apps project folder** opened in VS Code (containing the `.github/` folder)
 - **.github folder** is inside the Logic Apps project directory
 
-### 4. Start Using the Agent
+### 4. Start Using the Agents
 
-Once installed, invoke the agent in GitHub Copilot Chat:
+Once installed, invoke the agents in GitHub Copilot Chat:
 
+**For Workflow Tests:**
 ```plaintext
-@Logic Apps Unit Test Author discover workflows
+@Logic Apps Workflow Unit Test Author discover workflows
+```
+
+**For Data Map Tests:**
+```plaintext
+@Logic Apps Data Map Unit Test Author discover data maps
 ```
 
 Or reference specific skills directly:
 
 ```plaintext
 #file:.github/prompts/la-unit-tests-discover.prompt.md
+#file:.github/prompts/dm-unit-tests-discover.prompt.md
 ```
 
-The agent will automatically understand your Logic Apps project structure and guide you through test creation.
+The agents will automatically understand your Logic Apps project structure and guide you through test creation.
 
 ### Prerequisites
 
-Before using the agent, ensure:
-- A Logic Apps Standard project with `workflow.json` files
+Before using the agents, ensure:
+- A Logic Apps Standard project with `workflow.json` and/or data map files
 - .NET 8.0 SDK installed (for test execution)
 - VS Code opened at the Logic Apps project level (or workspace containing it)
 
@@ -93,29 +128,44 @@ Before using the agent, ensure:
 
 ## Agent Activation
 
-The agent automatically loads when working in a Logic Apps Standard workspace with unit tests. To explicitly reference:
+The agents automatically load when working in a Logic Apps Standard workspace with unit tests. To explicitly reference:
 
+**Workflow Tests:**
 ```plaintext
-@Logic Apps Unit Test Author discover workflows
-@Logic Apps Unit Test Author create test cases for la-process-message
-@Logic Apps Unit Test Author implement tests for all workflows
+@Logic Apps Workflow Unit Test Author discover workflows
+@Logic Apps Workflow Unit Test Author create test cases for la-process-message
+@Logic Apps Workflow Unit Test Author implement tests for all workflows
+```
+
+**Data Map Tests:**
+```plaintext
+@Logic Apps Data Map Unit Test Author discover data maps
+@Logic Apps Data Map Unit Test Author create test cases for OrderToInvoice
+@Logic Apps Data Map Unit Test Author implement tests for all data maps
 ```
 
 ## Architecture
 
-The agent uses a **prompt-based skill system** where specialized prompts handle different aspects of test authoring:
+The agents use a **prompt-based skill system** where specialized prompts handle different aspects of test authoring:
 
 ```
 .github/
 ├── agents/
-│   └── Logic Apps Unit Test Author.agent.md    # Main agent definition
-└── prompts/                                      # Specialized skills
-    ├── la-unit-tests-discover.prompt.md
+│   ├── Logic Apps Workflow Unit Test Author.agent.md  # Workflow test agent
+│   └── Logic Apps Data Map Unit Test Author.agent.md  # Data map test agent
+└── prompts/
+    ├── la-unit-tests-discover.prompt.md               # Workflow skills
     ├── la-unit-tests-create-cases.prompt.md
     ├── la-unit-tests-speckit-specs.prompt.md
     ├── la-unit-tests-implement.prompt.md
     ├── la-unit-tests-generate-test-data.prompt.md
-    └── la-unit-tests-project-batch.prompt.md
+    ├── la-unit-tests-project-batch.prompt.md
+    ├── dm-unit-tests-discover.prompt.md               # Data map skills
+    ├── dm-unit-tests-create-cases.prompt.md
+    ├── dm-unit-tests-speckit-specs.prompt.md
+    ├── dm-unit-tests-implement.prompt.md
+    ├── dm-unit-tests-generate-test-data.prompt.md
+    └── dm-unit-tests-project-batch.prompt.md
 ```
 
 ## Technical Stack
@@ -123,10 +173,20 @@ The agent uses a **prompt-based skill system** where specialized prompts handle 
 - **Target Framework**: .NET 8.0 (`net8.0`)
 - **Test Framework**: MSTest
 - **SDK**: `Microsoft.Azure.Workflows.WebJobs.Tests.Extension` version `1.*`
+
+### Workflow Tests
 - **Test Project Location**: `Tests/LogicApps/`
 - **Specs Location**: `plan/<workflow-name>-testplan.md`
+- **Executor Class**: `UnitTestExecutor`
+
+### Data Map Tests
+- **Test Project Location**: `Tests/DataMaps/`
+- **Specs Location**: `plan/<map-name>-testplan.md`
+- **Executor Class**: `DataMapTestExecutor`
 
 ## Available Skills (Prompts)
+
+### Workflow Test Skills (`la-unit-tests-*`)
 
 | Skill | Purpose | Prompt File |
 |-------|---------|-------------|
@@ -137,20 +197,31 @@ The agent uses a **prompt-based skill system** where specialized prompts handle 
 | **Generate Data** | Create typed mock output classes | `la-unit-tests-generate-test-data.prompt.md` |
 | **Batch Operations** | Process all workflows in a project | `la-unit-tests-project-batch.prompt.md` |
 
+### Data Map Test Skills (`dm-unit-tests-*`)
+
+| Skill | Purpose | Prompt File |
+|-------|---------|-------------|
+| **Discover** | Find data maps and analyze schemas | `dm-unit-tests-discover.prompt.md` |
+| **Create Cases** | Propose test scenarios for transformations | `dm-unit-tests-create-cases.prompt.md` |
+| **Write Specs** | Generate/update test specification docs | `dm-unit-tests-speckit-specs.prompt.md` |
+| **Implement** | Generate MSTest test classes | `dm-unit-tests-implement.prompt.md` |
+| **Generate Data** | Create input/expected output test files | `dm-unit-tests-generate-test-data.prompt.md` |
+| **Batch Operations** | Process all data maps in a project | `dm-unit-tests-project-batch.prompt.md` |
+
 ## Workflow Pattern
 
-The agent follows a **spec-first, implementation-second** approach:
+Both agents follow a **spec-first, implementation-second** approach:
 
 ```mermaid
 graph TD
-    A[1. Discover Workflows] --> B[2. Create Test Cases]
+    A[1. Discover] --> B[2. Create Test Cases]
     B --> C[3. Write Specifications]
     C --> D[4. Implement Tests]
-    D --> E[5. Generate Mock Data]
+    D --> E[5. Generate Test Data]
     E --> F[6. Validate with dotnet test]
 ```
 
-### Step-by-Step Process
+### Workflow Tests - Step-by-Step Process
 
 1. **Discovery Phase**
    - Scan for `workflow.json` files
@@ -169,9 +240,31 @@ graph TD
    - Implement test methods with proper assertions
    - Generate `testSettings.config` files
 
+### Data Map Tests - Step-by-Step Process
+
+1. **Discovery Phase**
+   - Scan for `.lml` files in `Artifacts/MapDefinitions/`
+   - Scan for `.xslt` files in `Artifacts/Maps/`
+   - Analyze source/target schema structures
+   - Request missing schemas if needed
+
+2. **Specification Phase**
+   - Create `plan/<map-name>-testplan.md`
+   - Document mapping rules and transformations
+   - Define test cases for happy path, edge cases, boundaries
+   - **Specs are reusable and version-controlled**
+
+3. **Implementation Phase**
+   - Scaffold `Tests/DataMaps/` project if needed (from `Tests.sln`)
+   - Generate MSTest classes using `DataMapTestExecutor`
+   - Create input test data files (`TestData/Input/`)
+   - Create expected output files (`TestData/Expected/`)
+
 ## Usage Examples
 
-### Single Workflow Testing
+### Workflow Testing
+
+#### Single Workflow Testing
 
 ```plaintext
 User: "Create test cases for the la-process-message workflow"
@@ -185,7 +278,7 @@ Agent will:
 6. Create plan/la-process-message-testplan.md
 ```
 
-### Batch Operations
+#### Batch Operations
 
 ```plaintext
 User: "Implement tests for all workflows"
@@ -201,16 +294,50 @@ Agent will:
 5. Report results per workflow
 ```
 
+### Data Map Testing
+
+#### Single Data Map Testing
+
+```plaintext
+User: "Create test cases for the OrderToInvoice data map"
+
+Agent will:
+1. Load dm-unit-tests-discover.prompt.md
+2. Analyze OrderToInvoice.lml for mappings and transformations
+3. Load dm-unit-tests-create-cases.prompt.md
+4. Propose test scenarios (TC01, TC02, etc.)
+5. Load dm-unit-tests-speckit-specs.prompt.md
+6. Create plan/OrderToInvoice-testplan.md
+```
+
+#### Batch Operations
+
+```plaintext
+User: "Implement tests for all data maps"
+
+Agent will:
+1. Load dm-unit-tests-project-batch.prompt.md
+2. Discover all data maps (.lml and .xslt)
+3. Scaffold DataMaps.Tests.csproj if needed
+4. For each data map:
+   - Create test spec
+   - Create test folder and config
+   - Generate test class
+   - Create test data files
+5. Run `dotnet build` and `dotnet test`
+6. Report results per map
+```
+
 ### Test Data Generation
 
 ```plaintext
 User: "Generate mock data for TC01"
 
 Agent will:
-1. Load la-unit-tests-generate-test-data.prompt.md
+1. Load appropriate generate-test-data prompt
 2. Read the test spec for TC01
-3. Create typed MockOutput classes
-4. Generate trigger and action mock payloads
+3. For workflows: Create typed MockOutput classes
+4. For data maps: Create input XML/JSON and expected output files
 ```
 
 ## Test Case Naming Convention
@@ -247,12 +374,16 @@ Examples:
 
 ## Documentation Links
 
+### Workflow Testing
 - [Azure Logic Apps Testing Framework](https://learn.microsoft.com/en-us/azure/logic-apps/testing-framework/)
 - [UnitTestExecutor Class](https://learn.microsoft.com/en-us/azure/logic-apps/testing-framework/unit-test-executor-class-definition)
 - [ActionMock Class](https://learn.microsoft.com/en-us/azure/logic-apps/testing-framework/action-mock-class-definition)
 - [TriggerMock Class](https://learn.microsoft.com/en-us/azure/logic-apps/testing-framework/trigger-mock-class-definition)
 
+### Data Map Testing
+- [DataMapTestExecutor Class](https://learn.microsoft.com/en-us/azure/logic-apps/testing-framework/data-map-test-executor-class-definition)
+
 ---
 
 **Last Updated**: January 2026  
-**Agent Version**: 1.0 (Prompt-based architecture)
+**Agent Version**: 1.1 (Added Data Map Unit Test Author)
