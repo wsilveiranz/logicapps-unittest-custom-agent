@@ -96,6 +96,46 @@ description: Implement MSTest unit tests for Logic Apps Standard data maps using
   <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
   ```
 
+## MSTest Annotations (required)
+**AGENT MUST include** the following annotations on every test class and method:
+
+### Class-Level Annotations:
+```csharp
+[TestClass]
+[TestCategory("DataMap")]            // Always include for data map tests
+[TestCategory("<map-name>")]         // e.g., "source_order_to_canonical_order"
+public class SourceOrderToCanonicalOrderTests
+{
+    // ...
+}
+```
+
+### Method-Level Annotations:
+```csharp
+[TestMethod]
+[Priority(1)]                                    // 1=Critical, 2=High, 3=Normal
+[Description("Brief description of test intent")]
+[TestProperty("TestCaseId", "TC01")]
+[TestProperty("Category", "HappyPath")]          // or "ErrorHandling", "DataVerification"
+public async Task TC01_ValidOrder_TransformsCorrectly()
+{
+    // ...
+}
+```
+
+### Priority Guidelines:
+| Priority | Usage |
+|----------|-------|
+| 1 | Happy path, critical transformation scenarios |
+| 2 | Edge cases, optional fields, boundary conditions |
+| 3 | Error handling, invalid input scenarios |
+
+### Category Values for TestProperty:
+- `HappyPath` - Normal successful transformation paths
+- `ErrorHandling` - Invalid input and error scenarios
+- `DataVerification` - Field mapping and value validation
+- `BoundaryConditions` - Edge cases (empty arrays, null values, limits)
+
 ## SDK Core Class: DataMapTestExecutor
 
 ### Namespace
@@ -194,9 +234,23 @@ Team size > 3 developers on same tests?
 ├── YES → Consider Option B (reduce merge conflicts)
 └── NO  → Use Option A (single file) ✓
 
-Default: Use Option A (single file) for Data Maps
+═══════════════════════════════════════════════════════════════
+DEFAULT FOR DATA MAPS: Option A (single file with multiple tests)
+═══════════════════════════════════════════════════════════════
+
 Reason: XSLT generation in [ClassInitialize] runs once,
         providing significant performance benefit.
+
+⚠️ AGENT BEHAVIOR WHEN DEVIATING FROM DEFAULT:
+If agent determines Option B (one file per test) is more appropriate
+based on the decision tree above, AGENT MUST:
+1. Explain the assessment and reasoning
+2. ASK THE USER: "Based on my analysis, I recommend using
+   Option B (one file per test) for this data map because [reasons].
+   Do you agree with this approach, or would you prefer the
+   default Option A (single file)?"
+3. Wait for user confirmation before proceeding
+4. If user disagrees, use the default Option A
 ```
 
 ## DataMapTestExecutorFactory Pattern

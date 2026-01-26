@@ -31,21 +31,47 @@ This ensures all test artifacts are visible and accessible in the IDE.
 
 ### How to Check Programmatically:
 Use file system tools to verify these paths exist:
+- `<workspace>/Tests/LogicApps/LogicApps.Tests.csproj` (project file)
 - `<workspace>/Tests/LogicApps/<workflow-name>/` (workflow test folder)
 - `<workspace>/Tests/LogicApps/<workflow-name>/MockOutputs/` (MockOutput classes)
 - `<workspace>/Tests/LogicApps/<workflow-name>/testSettings.config` (configuration file)
-- `<workspace>/Tests/LogicApps/LogicApps.Tests.csproj` (project file)
 
 ### Decision Tree:
 ```
-✅ All paths exist? 
-   → PROCEED with test implementation
-   
-❌ Any path missing?
-   → STOP immediately
-   → Inform user: "Scaffolding not found for workflow '<workflow-name>'"
-   → Provide instructions (see below)
-   → Wait for user confirmation before proceeding
+═══════════════════════════════════════════════════════════════
+CHECK 1: Does the test project exist?
+═══════════════════════════════════════════════════════════════
+LogicApps.Tests.csproj exists?
+├── YES → Continue to Check 2
+└── NO  → STOP - Full scaffolding required
+          Provide Manual Scaffolding Instructions (below)
+          Wait for user confirmation before proceeding
+
+═══════════════════════════════════════════════════════════════
+CHECK 2: Does the workflow-specific folder exist?
+═══════════════════════════════════════════════════════════════
+<workflow-name>/ folder exists under Tests/LogicApps/?
+├── YES → Continue to Check 3
+└── NO  → STOP - Workflow scaffolding required
+          ⚠️ Even though the test project exists, the workflow
+          folder must be scaffolded using the Logic Apps extension.
+          
+          AGENT MUST:
+          1. Inform user: "The test project exists, but scaffolding
+             for workflow '<workflow-name>' is missing."
+          2. Provide Manual Scaffolding Instructions (below)
+          3. Tell user: "After scaffolding completes, let me know
+             and I will continue with test implementation."
+          4. WAIT for user confirmation before proceeding
+          5. After confirmation, re-verify the folder exists
+
+═══════════════════════════════════════════════════════════════
+CHECK 3: Are all required files in place?
+═══════════════════════════════════════════════════════════════
+MockOutputs/ folder AND testSettings.config exist?
+├── YES → ✅ PROCEED with test implementation
+└── NO  → STOP - Incomplete scaffolding
+          Ask user to re-run scaffolding for the workflow
 ```
 
 ### Manual Scaffolding Instructions (for user):
@@ -91,6 +117,46 @@ Use file system tools to verify these paths exist:
   <PackageReference Include="MSTest.TestFramework" Version="3.2.0" />
   <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
   ```
+
+## MSTest Annotations (required)
+**AGENT MUST include** the following annotations on every test class and method:
+
+### Class-Level Annotations:
+```csharp
+[TestClass]
+[TestCategory("Workflow")]           // Always include for workflow tests
+[TestCategory("<workflow-name>")]    // e.g., "la-sb-process-order"
+public class TC01_TestClassName
+{
+    // ...
+}
+```
+
+### Method-Level Annotations:
+```csharp
+[TestMethod]
+[Priority(1)]                                    // 1=Critical, 2=High, 3=Normal
+[Description("Brief description of test intent")]
+[TestProperty("TestCaseId", "TC01")]
+[TestProperty("Category", "HappyPath")]          // or "ErrorHandling", "DataVerification"
+public async Task TC01_MethodName()
+{
+    // ...
+}
+```
+
+### Priority Guidelines:
+| Priority | Usage |
+|----------|-------|
+| 1 | Happy path, critical business flows |
+| 2 | Error handling, edge cases |
+| 3 | Data verification, non-critical scenarios |
+
+### Category Values for TestProperty:
+- `HappyPath` - Normal successful execution paths
+- `ErrorHandling` - Failure and exception scenarios
+- `DataVerification` - Input/output data validation
+- `BoundaryConditions` - Edge cases and limits
 
 ## SDK Core Classes (from Microsoft.Azure.Workflows.UnitTesting)
 | Class | Purpose | Notes | Documentation |
@@ -249,9 +315,23 @@ Team size > 3 developers on same tests?
 ├── YES → Use Option B (reduce merge conflicts) ✓
 └── NO  → Either option acceptable
 
-Default for Workflows: Use Option B (one file per test)
+═══════════════════════════════════════════════════════════════
+DEFAULT FOR WORKFLOWS: Option B (one file per test case)
+═══════════════════════════════════════════════════════════════
+
 Reason: Workflow tests typically require complex mock setups,
         and isolation prevents shared state issues.
+
+⚠️ AGENT BEHAVIOR WHEN DEVIATING FROM DEFAULT:
+If agent determines Option A (single file) is more appropriate
+based on the decision tree above, AGENT MUST:
+1. Explain the assessment and reasoning
+2. ASK THE USER: "Based on my analysis, I recommend using
+   Option A (single file) for this workflow because [reasons].
+   Do you agree with this approach, or would you prefer the
+   default Option B (one file per test)?"
+3. Wait for user confirmation before proceeding
+4. If user disagrees, use the default Option B
 
 Default for Data Maps: Use Option A (single file)
 Reason: XSLT generation in [ClassInitialize] provides
