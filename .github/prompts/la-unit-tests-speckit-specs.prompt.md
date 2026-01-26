@@ -4,8 +4,10 @@ description: Write and maintain Speckit-style specification documents for Logic 
 ---
 
 ## Workspace Setup
-- Ensure the `plan/` folder exists at the workspace root level
-- If the `plan/` folder is not already added to the VS Code workspace, add it using: `code --add <workspace>/plan`
+- Store specs in the **parent directory** of the Logic Apps project folder, not inside the Logic Apps project itself
+- Path pattern: `<parent-of-logicapps>/plan/<workflow-name>-testplan.md`
+- Example: If Logic Apps project is at `c:\dev\MyProject\LogicApps`, store plans at `c:\dev\MyProject\plan\`
+- After creating the `plan/` folder, add it to the VS Code workspace using: `code --add <parent-of-logicapps>/plan`
 
 ## Responsibilities
 - For each workflow, create or update a spec document that includes:
