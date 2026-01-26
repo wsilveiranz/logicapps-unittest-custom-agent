@@ -199,6 +199,65 @@ Tests/
              TC01_<Scenario>.cs
 ```
 
+## Test Organization: Single File vs Multiple Files
+
+**AGENT MUST decide** between two test organization approaches based on project characteristics:
+
+### Option A: Single File with Multiple Test Methods
+All test cases in one file (e.g., `<workflow-name>Tests.cs`) with `[ClassInitialize]` for shared setup.
+
+**Advantages:**
+- Shared executor initialization - faster test suite execution
+- Less code duplication - MockOutput classes reused easily
+- Easier refactoring - change common patterns in one place
+- Better overview - all tests for one workflow in single file
+
+**When to use:**
+- ✅ Number of test cases ≤ 15
+- ✅ Tests share many common mocks
+- ✅ Single developer or small team
+- ✅ Simple to moderate test complexity
+
+### Option B: One File Per Test Case (RECOMMENDED for Workflows)
+Each test case in separate file in its own subfolder (e.g., `TC01_<Scenario>/TC01_<Scenario>.cs`).
+
+**Advantages:**
+- Complete isolation between tests - no shared state risks
+- Easier parallel development - no merge conflicts
+- File name directly maps to test case
+- Self-contained - each test includes all its mocks and setup
+- Matches Extension scaffolding output
+
+**When to use:**
+- ✅ Complex workflows with many actions requiring mocks
+- ✅ Large team with multiple developers on same workflow
+- ✅ Each test requires unique mock configurations
+- ✅ CI/CD requires test-level parallelism across processes
+
+### Decision Tree:
+```
+Workflow has > 5 actions requiring mocks?
+├── YES → Use Option B (multiple files) ✓
+│         Each test's mock setup is complex enough to warrant isolation
+└── NO  → Either option works, consider team size
+
+Number of test cases > 15?
+├── YES → Use Option B (multiple files) ✓
+└── NO  → Consider Option A for simplicity
+
+Team size > 3 developers on same tests?
+├── YES → Use Option B (reduce merge conflicts) ✓
+└── NO  → Either option acceptable
+
+Default for Workflows: Use Option B (one file per test)
+Reason: Workflow tests typically require complex mock setups,
+        and isolation prevents shared state issues.
+
+Default for Data Maps: Use Option A (single file)
+Reason: XSLT generation in [ClassInitialize] provides
+        significant performance benefit when shared.
+```
+
 ## TestExecutor Pattern (4-parameter constructor)
 ```csharp
 public class TestExecutor

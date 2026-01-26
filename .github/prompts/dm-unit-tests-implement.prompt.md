@@ -137,7 +137,7 @@ Tests/
     ├── DataMapTestExecutorFactory.cs    # Factory class for executor creation
     └── <map-name>/
         ├── testSettings.config           # XML config with paths
-        ├── <map-name>Tests.cs            # Test class file
+        ├── <map-name>Tests.cs            # Test class file (single file approach)
         └── TestData/
             ├── Input/                     # Input test data files
             │   ├── TC01_ValidOrder.xml
@@ -147,6 +147,56 @@ Tests/
                 ├── TC01_ValidOrder_Expected.json
                 ├── TC02_EmptyItems_Expected.json
                 └── ...
+```
+
+## Test Organization: Single File vs Multiple Files
+
+**AGENT MUST decide** between two test organization approaches based on project characteristics:
+
+### Option A: Single File with Multiple Test Methods (RECOMMENDED for Data Maps)
+All test cases in one file (e.g., `<map-name>Tests.cs`) with `[ClassInitialize]` for shared setup.
+
+**Advantages:**
+- XSLT generation happens once via `[ClassInitialize]` - significantly faster execution
+- Less code duplication - shared executor and test data path
+- Easier refactoring - change common patterns in one place
+- Better overview - all tests for one map in single file
+
+**When to use:**
+- ✅ Number of test cases ≤ 15
+- ✅ Tests share common setup (same map, same executor)
+- ✅ Single developer or small team
+- ✅ Performance is important (XSLT generation is expensive)
+
+### Option B: One File Per Test Case
+Each test case in separate file (e.g., `TC01_ValidOrder/TC01_ValidOrder.cs`).
+
+**Advantages:**
+- Complete isolation between tests
+- Easier parallel development - no merge conflicts
+- File name directly maps to test case
+- Smaller diffs when modifying individual tests
+
+**When to use:**
+- ✅ Number of test cases > 15
+- ✅ Large team with multiple developers on same map
+- ✅ Highly complex individual tests requiring extensive setup
+- ✅ CI/CD requires test-level parallelism across processes
+
+### Decision Tree:
+```
+Number of test cases > 15?
+├── YES → Consider Option B (multiple files)
+│         BUT weigh against XSLT generation overhead
+└── NO  → Use Option A (single file) ✓
+
+Team size > 3 developers on same tests?
+├── YES → Consider Option B (reduce merge conflicts)
+└── NO  → Use Option A (single file) ✓
+
+Default: Use Option A (single file) for Data Maps
+Reason: XSLT generation in [ClassInitialize] runs once,
+        providing significant performance benefit.
 ```
 
 ## DataMapTestExecutorFactory Pattern
