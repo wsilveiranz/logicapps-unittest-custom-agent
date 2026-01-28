@@ -16,7 +16,8 @@ For testing **workflows** (`workflow.json` files):
 
 ### 2. Logic Apps Data Map Unit Test Author
 For testing **data maps** (`.lml` and `.xslt` files):
-- Discovering data map definitions and analyzing schemas
+- Discovering data map definitions (.lml in `Artifacts/MapDefinitions/`, .xslt in `Artifacts/Maps/`)
+- Analyzing source and target schema structures
 - Creating test specifications for transformations
 - Implementing MSTest test cases using `DataMapTestExecutor`
 - Generating input/expected output test data files
@@ -171,7 +172,8 @@ The agents use a **prompt-based skill system** where specialized prompts handle 
 ## Technical Stack
 
 - **Target Framework**: .NET 8.0 (`net8.0`)
-- **Test Framework**: MSTest
+- **Test Framework**: MSTest (minimum version `4.0.2`)
+- **Code Coverage**: coverlet.collector (`3.2.0`)
 - **SDK**: `Microsoft.Azure.Workflows.WebJobs.Tests.Extension` version `1.*`
 
 ### Workflow Tests
@@ -386,4 +388,4 @@ Examples:
 ---
 
 **Last Updated**: January 2026  
-**Agent Version**: 1.1 (Added Data Map Unit Test Author)
+**Agent Version**: 1.2 (MSTest 4.0.2, improved scaffolding checks)
