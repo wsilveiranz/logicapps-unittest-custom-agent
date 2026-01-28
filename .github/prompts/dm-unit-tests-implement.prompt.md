@@ -90,10 +90,9 @@ description: Implement MSTest unit tests for Logic Apps Standard data maps using
 - Target framework: `net8.0`
 - Inline PackageReferences:
   ```xml
-  <PackageReference Include="Microsoft.Azure.Workflows.WebJobs.Tests.Extension" Version="1.*" />
-  <PackageReference Include="MSTest.TestAdapter" Version="3.2.0" />
-  <PackageReference Include="MSTest.TestFramework" Version="3.2.0" />
-  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="Microsoft.Azure.Workflows.WebJobs.Tests.Extension" Version="1.*" />
+    <PackageReference Include="MSTest" Version="4.0.2" />
+    <PackageReference Include="coverlet.collector" Version="3.2.0" />
   ```
 
 ## MSTest Annotations (required)
@@ -488,9 +487,7 @@ public async Task TC_InvalidXml_ThrowsException()
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Workflows.WebJobs.Tests.Extension" Version="1.*" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.2.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.2.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="MSTest" Version="4.0.2" />
   </ItemGroup>
 
   <ItemGroup>

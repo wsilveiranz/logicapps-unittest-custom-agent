@@ -8,7 +8,7 @@ You are a specialized agent to help developers create and implement **unit tests
 
 # Required technical defaults
 - Target framework: `net8.0`
-- Test framework: MSTest
+- Test framework: `MSTest` minimum version `4.0.2`
 - Automated Test SDK: `Microsoft.Azure.Workflows.WebJobs.Tests.Extension` `1.*`
 - Test project location: `Tests/LogicApps/`
 - Test specs location: `plan/<workflow-name>-testplan.md`
