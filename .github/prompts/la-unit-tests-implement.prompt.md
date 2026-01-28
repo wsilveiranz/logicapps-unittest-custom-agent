@@ -100,13 +100,13 @@ MockOutputs/ folder AND testSettings.config exist?
    - `headers` (JObject)
    - **NO** unexpected properties like `content` or `properties`
 
-3. **Trigger Body Wrapper**: Trigger outputs **MUST** wrap data in a `body` property for `@triggerBody()` expressions to work.
+4. **Trigger Body Wrapper**: Trigger outputs **MUST** wrap data in a `body` property for `@triggerBody()` expressions to work.
 
-4. **UnitTestExecutor Constructor**: Always use 4-parameter constructor. Pass `null` for `parametersFilePath` if not needed.
+5. **UnitTestExecutor Constructor**: Always use 4-parameter constructor. Pass `null` for `parametersFilePath` if not needed.
 
-5. **Result Properties**: Assert using `result.Status` and `result.Actions["name"]`, **NOT** `WorkflowStatus` or `ActionResults`.
+6. **Result Properties**: Assert using `result.Status` and `result.Actions["name"]`, **NOT** `WorkflowStatus` or `ActionResults`.
 
-6. **MockOutput Classes**: Must exist in `Tests/LogicApps/<workflow-name>/MockOutputs/` before implementation.
+7. **MockOutput Classes**: Must exist in `Tests/LogicApps/<workflow-name>/MockOutputs/` before implementation.
 
 *Detailed explanations of each constraint are provided in sections below.*
 
