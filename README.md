@@ -29,7 +29,7 @@ To integrate this agent into your Logic Apps Standard project:
 
 ### 1. Create the Agent Structure
 
-**Important**: The `.github/` folder must be placed **inside your Logic Apps project directory**, not at the workspace root.
+**Important**: Open your Logic Apps Standard workspace via your workspace file and copy the `.github/` folder **inside your Logic Apps project directory**, not at the workspace root.
 
 ```
 <workspace>/                           # VS Code workspace root
