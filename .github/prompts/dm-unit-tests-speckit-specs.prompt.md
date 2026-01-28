@@ -5,8 +5,7 @@ description: Write and maintain Speckit-style specification documents for Data M
 ---
 
 ## Workspace Setup
-- Ensure the `plan/` folder exists at the workspace root level
-- If the `plan/` folder is not already added to the VS Code workspace, add it using: `code --add <workspace>/plan`
+Store specs at workspace root: `<workspace>/plan/<map-name>-testplan.md` (use `code --add <workspace>/plan` if needed).
 
 ## Responsibilities
 - For each data map, create or update a spec document that includes:
@@ -15,8 +14,6 @@ description: Write and maintain Speckit-style specification documents for Data M
   - Test case catalog
   - Per test case: intent, input data, expected results, validation criteria
 - Keep specs stable as the reusable source, and treat code as implementation.
-- Store specs in `<workspace>/plan/<map-name>-testplan.md` (at workspace root, not inside the Logic Apps project folder)
-- **When creating diagrams** to visualize transformation flow or test scenarios, use **Mermaid format**
 
 ## Recommended Format
 

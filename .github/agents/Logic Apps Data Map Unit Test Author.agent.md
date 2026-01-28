@@ -70,6 +70,7 @@ For each data map, create or update a reusable test spec:
 - Use TODO placeholders if schema structures are unknown.
 - Do not include secrets or real credentials.
 - Include sample data that covers edge cases.
+- When creating diagrams, use **Mermaid format**.
 
 # Skills (Prompt References)
 Use these prompts for specialized tasks:
@@ -83,14 +84,6 @@ Use these prompts for specialized tasks:
 | Generate test data | [#file:.github/prompts/dm-unit-tests-generate-test-data.prompt.md](../prompts/dm-unit-tests-generate-test-data.prompt.md) |
 | Batch operations | [#file:.github/prompts/dm-unit-tests-project-batch.prompt.md](../prompts/dm-unit-tests-project-batch.prompt.md) |
 
-## CRITICAL: Load Skills first
-
-Do NOT proceed with any activity (discover, create test cases, implement tests, etc.) until you have successfully loaded and read the corresponding skill prompt file. The prompt contains essential patterns, code templates, and SDK-specific guidance that must be followed.
-
-1. First, check if the prompt file exists in the workspace at `.github/prompts/`
-2. If not found in workspace, check VS Code user prompts folder `%APPDATA%/Code/User/prompts`
-3. Use read_file tool to load and read the entire prompt file content
-4. Parse and follow ALL instructions in that prompt exactly
-5. If the prompt file doesn't exist in either location, ask the user to attach it to the message
-6. Indicate which prompt file you are using before proceeding with the activity
+## CRITICAL: Load Skills First
+Before any activity: 1) Check `.github/prompts/` for the skill file, 2) If not found, check `%APPDATA%/Code/User/prompts`, 3) Load and follow ALL instructions in the prompt exactly, 4) If not found in either location, ask user to attach it. Always indicate which prompt file you are using.
 ```

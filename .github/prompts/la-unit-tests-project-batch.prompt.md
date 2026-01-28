@@ -80,15 +80,13 @@ Once all workflows have been scaffolded, notify the agent to restart the batch o
 ```
 
 ## Batch Operation Workflow
-0. **Workspace Setup**
-   - Ensure `plan/` folder exists at workspace root
-   - Ensure `Tests/` folder exists at workspace root
-   - If folders are not already in the VS Code workspace, add them using:
-     - `code --add <workspace>/plan`
-     - `code --add <workspace>/Tests`
-   - This ensures test specs and test code are visible and accessible in the IDE
 
-1. **Discovery Phase**
+### 0. Workspace Setup
+Verify these folders exist and are in VS Code workspace (use `code --add <path>` if needed):
+- `<workspace>/plan/` - Test specifications
+- `<workspace>/Tests/` - Test projects
+
+### 1. Discovery Phase**
    - Scan for `workflow.json` files
    - Build workflow inventory with trigger/action details
    - Identify mockable dependencies
@@ -123,7 +121,6 @@ Once all workflows have been scaffolded, notify the agent to restart the batch o
 - Summary table: workflow -> artifacts created/updated
 - Any skipped workflows + reason
 - Build/test results
-- **When creating diagrams** to visualize batch progress or workflow relationships, use **Mermaid format**
 
 | Workflow | Spec | MockOutputs | Test Cases | Status |
 |----------|------|-------------|------------|--------|

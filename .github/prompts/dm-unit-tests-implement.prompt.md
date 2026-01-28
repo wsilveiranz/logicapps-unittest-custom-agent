@@ -79,12 +79,9 @@ description: Implement MSTest unit tests for Logic Apps Standard data maps using
 - Example: Both `OrderToInvoice.lml` and `OrderToInvoice.xslt` → `Tests/DataMaps/OrderToInvoice/`
 
 ## Workspace Setup
-**AGENT SHOULD verify** the following folders exist and are added to the VS Code workspace:
-
-1. **Plan folder**: Ensure `<workspace>/plan/` exists at workspace root
-   - If not already in the VS Code workspace, add it using: `code --add <workspace>/plan`
-2. **Tests folder**: Create `<workspace>/Tests/` if it doesn't exist
-   - If not already in the VS Code workspace, add it using: `code --add <workspace>/Tests`
+Verify these folders exist and are in VS Code workspace (use `code --add <path>` if needed):
+- `<workspace>/plan/` - Test specifications
+- `<workspace>/Tests/` - Test projects
 
 ## Defaults (must enforce)
 - Target framework: `net8.0`

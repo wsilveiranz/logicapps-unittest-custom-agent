@@ -30,16 +30,7 @@ description: Create unit test cases from a Logic Apps Standard data map definiti
 | Numeric Precision | Decimal calculations | Correct precision maintained |
 
 ## Naming Convention
-```
-TC<##>_<BriefScenarioName>
-Examples:
-  TC01_ValidOrderTransformation
-  TC02_EmptyLineItems
-  TC03_MissingOptionalFields
-  TC04_SpecialCharactersInName
-  TC05_MaximumLineItems
-  TC06_DateFormatConversion
-```
+Format: `TC<##>_<BriefScenarioName>` (e.g., `TC01_ValidOrderTransformation`, `TC03_MissingOptionalFields`)
 
 ## Test Case Template
 ```markdown

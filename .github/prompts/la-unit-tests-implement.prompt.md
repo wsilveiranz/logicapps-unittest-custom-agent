@@ -17,14 +17,9 @@ description: Implement MSTest unit tests for Logic Apps Standard workflows using
 - **DO NOT** proceed with test implementation until scaffolding is complete
 
 ## Workspace Setup
-**AGENT SHOULD verify** the following folders exist and are added to the VS Code workspace:
-
-1. **Plan folder**: Ensure `<workspace>/plan/` exists at workspace root
-   - If not already in the VS Code workspace, add it using: `code --add <workspace>/plan`
-2. **Tests folder**: Create `<workspace>/Tests/` if it doesn't exist
-   - If not already in the VS Code workspace, add it using: `code --add <workspace>/Tests`
-
-This ensures all test artifacts are visible and accessible in the IDE.
+Verify these folders exist and are in VS Code workspace (use `code --add <path>` if needed):
+- `<workspace>/plan/` - Test specifications
+- `<workspace>/Tests/` - Test projects
 
 ## Critical: Scaffolding the Test Project for each Workflow
 **AGENT MUST** verify the test project scaffolding is in place before implementing tests.

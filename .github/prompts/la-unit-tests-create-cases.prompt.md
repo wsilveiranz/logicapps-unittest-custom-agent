@@ -29,14 +29,7 @@ description: Create unit test cases from a Logic Apps Standard workflow definiti
 - `TimedOut` - Action timed out
 
 ## Naming Convention
-```
-TC<##>_<BriefScenarioName>
-Examples:
-  TC01_SuccessfulEndToEndFlow
-  TC02_VerifyBlobNameFormat
-  TC03_BlobUploadFailure
-  TC04_EmptyRequestBody
-```
+Format: `TC<##>_<BriefScenarioName>` (e.g., `TC01_SuccessfulEndToEndFlow`, `TC03_BlobUploadFailure`)
 
 ## Test Case Template
 ```markdown

@@ -14,9 +14,7 @@ description: Discover Logic Apps Standard data map definitions in the repo, anal
   - Identify any custom functions or complex transformations.
 - Output a data map inventory report for downstream skills.
 
-## Output Format
-**When creating diagrams** to visualize map structure or transformation flow, use **Mermaid format**.
-
+## Diagram Format
 Example transformation flow:
 ```mermaid
 flowchart LR

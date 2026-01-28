@@ -11,10 +11,7 @@ description: Discover Logic Apps Standard workflow definitions in the repo, summ
   - Extract exact action names from `workflow.json` (these become mock keys).
 - Output a workflow inventory report for downstream skills.
 
-## Output Format
-**When creating diagrams** to visualize workflow structure or execution flow, use **Mermaid format**.
-
-Example workflow execution flow:
+## Workflow Diagram Format
 ```mermaid
 flowchart LR
     Trigger[Trigger: When message arrives] --> Action1[Parse JSON]

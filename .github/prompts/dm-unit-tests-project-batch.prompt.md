@@ -118,12 +118,9 @@ dotnet sln Tests/Tests.sln add Tests/DataMaps/DataMaps.Tests.csproj
 ## Batch Operation Workflow
 
 ### 0. Workspace Setup
-- Ensure `plan/` folder exists at workspace root
-- Ensure `Tests/` folder exists at workspace root
-- If folders are not already in the VS Code workspace, add them using:
-  - `code --add <workspace>/plan`
-  - `code --add <workspace>/Tests`
-- This ensures test specs and test code are visible and accessible in the IDE
+Verify these folders exist and are in VS Code workspace (use `code --add <path>` if needed):
+- `<workspace>/plan/` - Test specifications
+- `<workspace>/Tests/` - Test projects
 
 ### 1. Discovery Phase
 - Scan for `.lml` files in `Artifacts/MapDefinitions/`
@@ -203,7 +200,6 @@ Please provide the missing information to continue.
 - Summary table: map -> artifacts created/updated
 - Any skipped maps + reason (e.g., missing schemas)
 - Build/test results
-- **When creating diagrams** to visualize batch progress or map relationships, use **Mermaid format**
 
 ### Summary Report Format
 ```markdown
